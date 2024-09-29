@@ -1,105 +1,10 @@
 import Head from "next/head";
 import { useState } from "react";
-import type { TokenListResponse } from "~/types/coingecko";
 import { api } from "~/utils/api";
 import { WalletComponents } from "./components/Wallet";
 import SwapComponents from "./components/Swap";
 import { Token } from "@coinbase/onchainkit/token";
-
-function TokenTable({
-  tokens,
-  onTokenSelected,
-}: {
-  tokens: TokenListResponse[];
-  onTokenSelected: (token: Token) => void;
-}) {
-  const fetchTokenAddress = api.coingecko.getTokenByIdQuery.useMutation();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentTokens = tokens.slice(indexOfFirstItem, indexOfLastItem);
-
-  const totalPages = Math.ceil(tokens.length / itemsPerPage);
-
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const selectToken = async (tokenListResponse: TokenListResponse) => {
-    const tokenData = await fetchTokenAddress.mutateAsync({
-      id: tokenListResponse.id,
-    });
-
-    const baseToken = tokenData.detail_platforms.base;
-    if (!baseToken) return;
-
-    console.log({ tokenData });
-    console.log({ tokenData })
-
-    onTokenSelected({
-      address: baseToken.contract_address as `0x${string}`,
-      chainId: 8543,
-      decimals: baseToken.decimal_place,
-      name: tokenListResponse.name,
-      symbol: tokenListResponse.symbol,
-      image: tokenListResponse.image,
-    } as Token);
-  }
-
-  return (
-    <div className="flex flex-col items-center">
-      <div className="w-full overflow-x-auto">
-        <table className="min-w-full overflow-hidden rounded-lg bg-white shadow-md">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Price</th>
-              <th className="px-4 py-2">24h %</th>
-              <th className="px-4 py-2">Market Cap</th>
-              <th className="px-4 py-2">Volume</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentTokens.map((token) => (
-              <tr key={token.id} onClick={() => selectToken(token)} className="border-b hover:bg-gray-100">
-                <td className="px-4 py-2">{token.name}</td>
-                <td className="px-4 py-2">${token.current_price.toFixed(2)}</td>
-                <td className="px-4 py-2">
-                  {token.price_change_percentage_24h?.toFixed(2)}%
-                </td>
-                <td className="px-4 py-2">
-                  ${token.market_cap?.toLocaleString()}
-                </td>
-                <td className="px-4 py-2">
-                  ${token.total_volume?.toLocaleString()}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="mt-4 flex">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-          (pageNumber) => (
-            <button
-              key={pageNumber}
-              onClick={() => handlePageChange(pageNumber)}
-              className={`mx-1 rounded px-3 py-1 ${
-                currentPage === pageNumber
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200"
-              }`}
-            >
-              {pageNumber}
-            </button>
-          ),
-        )}
-      </div>
-    </div>
-  );
-}
+import TokenTable from "./components/TokenTable";
 
 const USDCToken: Token = {
   address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
@@ -117,7 +22,6 @@ export default function Home() {
     isLoading,
     error,
   } = api.coingecko.getTokens.useQuery({
-    category: "base-meme-coins",
     sparkline: false,
   });
   const [inputToken, setInputToken] = useState<Token>(USDCToken);

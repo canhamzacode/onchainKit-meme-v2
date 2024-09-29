@@ -13,13 +13,20 @@ export const coingeckoRouter = createTRPCRouter({
       return json;
     }),
   getTokens: publicProcedure
-    .input(z.object({ category: z.string().optional(), sparkline: z.boolean().optional() }))
+    .input(z.object({ 
+      sparkline: z.boolean().optional(),
+      page: z.number().optional(),
+      perPage: z.number().optional()
+    }))
     .query(async ({ input }) => {
       try {
         const params = new URLSearchParams({
           vs_currency: "usd",
-          category: input.category ?? "base-meme-coins",
+          category: "meme-token",
+          order: "market_cap_desc",
           sparkline: (input.sparkline ?? true).toString(),
+          page: (input.page ?? 1).toString(),
+          per_page: (input.perPage ?? 100).toString(),
           x_cg_demo_api_key: env.COINGECKO_API_KEY,
         });
         const url = `https://api.coingecko.com/api/v3/coins/markets?${params.toString()}`;
