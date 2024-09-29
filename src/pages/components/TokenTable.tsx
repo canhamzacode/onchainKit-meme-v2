@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { Table } from "antd";
-import { CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons";
 import { ColumnsType } from "antd/es/table";
 import type { TokenListResponse } from "~/types/coingecko";
 import { api } from "~/utils/api";
 import { Token } from "@coinbase/onchainkit/token";
 import { useAccount } from "wagmi";
+import { FaSortDown, FaSortUp } from "react-icons/fa";
 
 interface TokenTableProps {
   tokens: TokenListResponse[];
@@ -77,8 +77,8 @@ const TokenTable = ({ tokens, onTokenSelected }: TokenTableProps) => {
       dataIndex: "price_change_percentage_24h",
       key: "price_change",
       render: (change: number | null) => (
-        <span style={{ color: change && change >= 0 ? "green" : "red" }}>
-          {change && change >= 0 ? <CaretUpOutlined /> : <CaretDownOutlined />}
+        <span style={{ color: change && change >= 0 ? "green" : "red", display:"flex", alignItems:"center" }}>
+          {change && change >= 0 ? <FaSortUp /> : <FaSortDown />}
           {change?.toFixed(2)}%
         </span>
       ),
