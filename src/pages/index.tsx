@@ -4,7 +4,7 @@ import { api } from "~/utils/api";
 import { WalletComponents } from "./components/Wallet";
 import SwapComponents from "./components/Swap";
 import { Token } from "@coinbase/onchainkit/token";
-import TokenTable from "./components/TokenTable";
+import MemeTable from "./components/Table";
 
 const USDCToken: Token = {
   address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
@@ -39,7 +39,7 @@ export default function Home() {
           <SwapComponents inputToken={inputToken} />
           {isLoading && <p>Loading tokens...</p>}
           {error && <p>Error loading tokens: {error.message}</p>}
-          {tokens && <TokenTable onTokenSelected={setInputToken} tokens={tokens} />}
+          {tokens && <MemeTable onTokenSelected={setInputToken} tokens={tokens} />}
         </div>
       </main>
     </>
