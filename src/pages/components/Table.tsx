@@ -29,7 +29,9 @@ const MemeTable: React.FC<TokenTableProps> = ({ tokens, onTokenSelected }) => {
       id: tokenListResponse.id,
     });
 
+    console.log("Token Data:", tokenData.detail_platforms); // Log the entire response
     const baseToken = tokenData.detail_platforms.base; // Get the base token from the API response
+    console.log("Base Token:", baseToken);
     if (!baseToken) return; // Exit if base token does not exist
 
     // Call the onTokenSelected callback with the selected token details
