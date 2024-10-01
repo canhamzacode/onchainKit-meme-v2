@@ -8,7 +8,7 @@ export const wagmiConfig = createConfig({
   connectors: [
     coinbaseWallet({
       appName: 'jake bounty',
-      preference: 'smartWalletOnly',
+      preference: 'all',
       version: '4',
     }),
   ],
